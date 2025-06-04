@@ -12,10 +12,14 @@ async function listInvoices() {
 
   return data;
 }
+async function getUsers() {
+  const data = await sql`SELECT * FROM invoices`;
 
+  return data;
+}
 export async function GET() {
   try {
-    return Response.json(await listInvoices());
+    return Response.json(await getUsers());
   } catch (error) {
     return Response.json({ error }, { status: 500 });
   }

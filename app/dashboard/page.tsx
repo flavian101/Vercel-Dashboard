@@ -1,7 +1,46 @@
 import React from "react";
+import { lusitana } from "../ui/fonts";
+import { fetchCardData, fetchLatestInvoices, fetchRevenue } from "../lib/data";
+import RevenueChart from "../ui/dashboard/revenue-chart";
+import LatestInvoices from "../ui/dashboard/latest-invoices";
+import { Card } from "../ui/dashboard/cards";
 
-const Dashboard = () => {
-  return <div>Dashboard</div>;
-};
+export default async function Dashboard() {
+  const revenue = await fetchRevenue();
+  const latestInvoices = await fetchLatestInvoices();
 
-export default Dashboard;
+  const {
+    numberOfCustomers,
+    numberOfInvoices,
+    totalPaidInvoices,
+    totalPendingInvoices,
+  } = await fetchCardData();
+
+  return (
+    <main>
+      <h1 className={`${lusitana} mb-4 text-xl md:text-2xl`}> DashBoard</h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-col-4">
+        {<Card title="Collected" value={totalPaidInvoices} type="collected" />}
+        {<Card title="Pending" value={totalPendingInvoices} type="pending" />}
+        {
+          <Card
+            title="Total Invoices"
+            value={numberOfInvoices}
+            type="invoices"
+          />
+        }
+        {
+          <Card
+            title="Total Customers"
+            value={numberOfCustomers}
+            type="customers"
+          />
+        }
+      </div>
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
+        {<RevenueChart revenue={revenue} />}
+        {<LatestInvoices latestInvoices={latestInvoices} />}
+      </div>
+    </main>
+  );
+}
